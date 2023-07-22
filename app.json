@@ -21,7 +21,10 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+        "package": "com.healaid.app",
+        "version": "1.0.0",
+        "googleServiceFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
