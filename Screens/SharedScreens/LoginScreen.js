@@ -1,14 +1,26 @@
-import { ImageBackground, StyleSheet, Text, View, TextInput } from "react-native";
+import {
+  ImageBackground,
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import { useState } from "react";
 import Button from "../../components/UI/Button";
 import Card from "../../components/UI/Card";
 import { colors } from "../../constants/colors";
+import { useRoute } from "@react-navigation/native";
 
-const LoginScreen = ({ navigation, route }) => {
+
+const LoginScreen = ({ navigation}) => {
+  const route = useRoute()
+  console.log("this is route",route.params)
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+
 
   const signupHandler = () => {
     navigation.navigate("SignupScreen", {});
@@ -55,7 +67,9 @@ const LoginScreen = ({ navigation, route }) => {
               setEmail(text);
             }}
           />
-          {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+          {emailError ? (
+            <Text style={styles.errorText}>{emailError}</Text>
+          ) : null}
 
           <TextInput
             style={styles.inputContainer}
@@ -67,7 +81,9 @@ const LoginScreen = ({ navigation, route }) => {
             }}
             secureTextEntry
           />
-          {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+          {passwordError ? (
+            <Text style={styles.errorText}>{passwordError}</Text>
+          ) : null}
         </View>
 
         <View style={styles.buttonContainer}>
@@ -75,6 +91,11 @@ const LoginScreen = ({ navigation, route }) => {
             <Button style={styles.button} onPress={loginAsPatientHandler}>
               Login
             </Button>
+            <TouchableOpacity onPress={()=>route.params.open()}>
+      <Text> 'Connect'</Text>        
+        <Text>Connect Wallet</Text>
+      </TouchableOpacity>
+            
           </View>
         </View>
 
@@ -84,7 +105,6 @@ const LoginScreen = ({ navigation, route }) => {
             Register Now
           </Text>
         </Text>
-
       </Card>
     </View>
   );
@@ -150,6 +170,6 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     borderBottomWidth: 1,
     borderBottomColor: colors.darkTeal,
-    width: 250
+    width: 250,
   },
 });

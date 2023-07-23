@@ -1,35 +1,45 @@
-import { StatusBar } from 'expo-status-bar';
-import 'fast-text-encoding';
-import { StyleSheet, Text, View, ImageBackground } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import "fast-text-encoding";
+import { StyleSheet, Text, View, ImageBackground } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import UserHomeScreen from "./Screens/PatientScreens/UserHomeScreen";
 import Profile from "./Screens/PatientScreens/Profile";
-import AddRecord from "./Screens/PatientScreens/AddRecord/AddRecord" ;
+import AddRecord from "./Screens/PatientScreens/AddRecord/AddRecord";
 import MyAppointments from "./Screens/PatientScreens/MyAppointments";
 import SplashScreen from "./Screens/SharedScreens/SplashScreen";
-import SignupScreen from './Screens/PatientScreens/SignupScreen';
+import SignupScreen from "./Screens/PatientScreens/SignupScreen";
 import LoginScreen from "./Screens/SharedScreens/LoginScreen";
-import UploadImage from './components/Records/UploadImage';
+import UploadImage from "./components/Records/UploadImage";
 import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { colors } from "./constants/colors";
-import SearchDoctor from './Screens/PatientScreens/SearchDoctor';
-import TimeSlot from './Screens/PatientScreens/Booking/TimeSlot';
-import PatientDetails from './Screens/PatientScreens/Booking/PatientDetails';
-import PaymentDetails from './Screens/PatientScreens/Booking/PaymentDetails';
-import DoctorHomeScreen from './Screens/DoctorScreens/DoctorHomeScreen';
-import DoctorProfile from './Screens/DoctorScreens/DoctorProfile';
-import ScheduledAppointments from './Screens/DoctorScreens/ScheduledAppointments';
-import MetaMask from './Screens/PatientScreens/Booking/MetaMask';
-
-
+import SearchDoctor from "./Screens/PatientScreens/SearchDoctor";
+import TimeSlot from "./Screens/PatientScreens/Booking/TimeSlot";
+import PatientDetails from "./Screens/PatientScreens/Booking/PatientDetails";
+import PaymentDetails from "./Screens/PatientScreens/Booking/PaymentDetails";
+import DoctorHomeScreen from "./Screens/DoctorScreens/DoctorHomeScreen";
+import DoctorProfile from "./Screens/DoctorScreens/DoctorProfile";
+import ScheduledAppointments from "./Screens/DoctorScreens/ScheduledAppointments";
+import MetaMask from "./Screens/PatientScreens/Booking/MetaMask";
+// Only for Expo SDK 48
+import './expo-crypto-shim.js'
+// import { useWalletConnectModal } from '@walletconnect/modal-react-native';
+import { WalletConnectModal, useWalletConnectModal } from "@walletconnect/modal-react-native";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
+const projectId = 'd9a06280b39e187f4605823cd1a0c80d';
 
+const providerMetadata = {
+  name: 'HealAid',
+  description: 'Health Care App',
+  url: 'https://dsu.edu.pk/',
+  icons: ['https://dsu.edu.pk/'],
+ 
+};
 const Dashboard = ({ route }) => {
   return (
     <Tab.Navigator
@@ -160,51 +170,75 @@ const DoctorDashboard = ({ route }) => {
 };
 
 export default function App() {
+  const { isOpen, open, close, provider, isConnected, address } = useWalletConnectModal();
+  
   return (
     
-    <View style={styles.container}>  
+    <>
       <StatusBar style="light" />
-        <NavigationContainer>
-          <Stack.Navigator
-            screenOptions={{
-             // headerTitle: () => <LogoTitle />,
-             // headerStyle: { backgroundColor: colors.darkTeal },
-              headerTintColor: colors.blue,
+      <WalletConnectModal
+              projectId={projectId}
+              providerMetadata={providerMetadata}
+            />
+      <NavigationContainer>
+      
+      
+        <Stack.Navigator
+          screenOptions={{
+            // headerTitle: () => <LogoTitle />,
+            // headerStyle: { backgroundColor: colors.darkTeal },
+            headerTintColor: colors.blue,
+          }}
+        >
+          <Stack.Screen
+            name="SplashScreen"
+            component={SplashScreen}
+            options={{
+              headerShown: false,
             }}
-          >
-            <Stack.Screen
-              name="SplashScreen"
-              component={SplashScreen}
-              options={{
-                headerShown: false,
-              }}
-            />
-             <Stack.Screen
-              name="SignupScreen"
-              component={SignupScreen}
-              options={{
-                title: "Register Yourself",
-              }}
-            />
-            <Stack.Screen
-              name="LoginScreen"
-              component={LoginScreen}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen name="DashboardScreen" component={Dashboard} />
-            <Stack.Screen name="DoctorDashboard" component={DoctorDashboard} />
-            <Stack.Screen name="UploadImage" component={UploadImage} />
-            <Stack.Screen name="SearchDoctor" component={SearchDoctor} initialParams={navigator} />
-            <Stack.Screen name="TimeSlot" component={TimeSlot} initialParams={navigator} />
-            <Stack.Screen name="PatientDetails" component={PatientDetails}  />
-            <Stack.Screen name="PaymentDetails" component={PaymentDetails} />
-            <Stack.Screen name="MetaMask" component={MetaMask} />
-           
-          </Stack.Navigator>
-        </NavigationContainer>
-    </View>
+          />
+          <Stack.Screen
+            name="SignupScreen"
+            component={SignupScreen}
+            options={{
+              title: "Register Yourself",
+            }}
+          />
+          <Stack.Screen
+            name="LoginScreen"
+            component={LoginScreen}
+            options={{
+              headerShown: false,
+            }}
+            initialParams={{
+              isOpen,
+              open,
+              close,
+              provider,
+              isConnected,
+              address,
+            }}
+            
+          />
+          <Stack.Screen name="DashboardScreen" component={Dashboard} />
+          <Stack.Screen name="DoctorDashboard" component={DoctorDashboard} />
+          <Stack.Screen name="UploadImage" component={UploadImage} />
+          <Stack.Screen
+            name="SearchDoctor"
+            component={SearchDoctor}
+            initialParams={navigator}
+          />
+          <Stack.Screen
+            name="TimeSlot"
+            component={TimeSlot}
+            initialParams={navigator}
+          />
+          <Stack.Screen name="PatientDetails" component={PatientDetails} />
+          <Stack.Screen name="PaymentDetails" component={PaymentDetails} />
+          <Stack.Screen name="MetaMask" component={MetaMask} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </>
   );
 }
 
@@ -212,15 +246,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     //backgroundColor: '#fff',
-   // alignItems: 'center',
-   // justifyContent: 'center',
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
   backgroundImage: {
     flex: 1,
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
   image: {
     opacity: 0.1,
   },
- 
 });
