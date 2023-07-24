@@ -1,5 +1,4 @@
-
-import { Image, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, TextInput, View, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 
 import * as ImagePicker from "expo-image-picker";
@@ -10,7 +9,7 @@ import UploadImage from "../../../components/Records/UploadImage";
 
 const AddRecord = ({ navigation, route }) => {
   const [showPickComponent, setPickShowComponent] = useState(false);
-  const [images, setImages] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
   const [imageDetails, setImageDetails] = useState({
     title: "",
     date: "",
@@ -21,70 +20,99 @@ const AddRecord = ({ navigation, route }) => {
     setPickShowComponent(true);
   };
 
+  const uploadHandler = () => {
+    // Implement your upload logic here
+  };
+
   const handleChildComponentComplete = () => {
     setPickShowComponent(false);
   };
 
   const handleImage = (imageUrl) => {
     setPickShowComponent(false);
-    setImages((prev) => [...prev, { imageUrl, ...imageDetails }]);
+    setSelectedImage(imageUrl);
     // Reset the image details
-    setImageDetails({ title: "",date:"", description: "" });
+    setImageDetails({ title: "", date: "", description: "" });
+  };
+
+  const handleSelectNewImage = async () => {
+    try {
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (!permissionResult.granted) {
+        alert('You need to grant gallery permissions to select an image.');
+        return;
+      }
+
+      const pickerResult = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+
+      if (!pickerResult.cancelled) {
+        setSelectedImage(pickerResult.uri);
+        // You can optionally reset the image details when selecting a new image.
+        setImageDetails({ title: "", date: "", description: "" });
+      }
+    } catch (error) {
+      console.log('Error selecting new image:', error);
+    }
   };
 
   return (
     <View style={styles.container}>
       <ScrollView>
         <Text style={styles.title}>RECORD</Text>
-        <View style={styles.buttonContainer}>
-          <Button onPress={pressHandlerPick} style={styles.button}>
-            Pick Image
-          </Button>
-        </View>
+        {!selectedImage && (
+          <View style={styles.buttonContainer}>
+            <Button onPress={pressHandlerPick} style={styles.button}>
+              Pick Image
+            </Button>
+          </View>
+        )}
         {showPickComponent && <PickImage onSelectImage={handleImage} />}
-        {images.map((imageData, index) => (
+        {selectedImage && (
           <View style={styles.card}>
-            <View key={index} style={styles.imageContainer}>
-            <Image source={{ uri: imageData.imageUrl }} style={styles.image} />
-            <View style={styles.detailContainer}>
-            <TextInput
-              placeholder="Title"
-              value={imageData.title}
-              onChangeText={(text) =>
-                setImages((prev) =>
-                  prev.map((item, idx) =>
-                    idx === index ? { ...item, title: text } : item
-                  )
-                )
-              }
-            />
-            <TextInput
-              placeholder="Date"
-              value={imageData.date}
-              onChangeText={(text) =>
-                setImages((prev) =>
-                  prev.map((item, idx) =>
-                    idx === index ? { ...item, date: text } : item
-                  )
-                )
-              }
-            />
-            <TextInput
-              placeholder="Description"
-              value={imageData.description}
-              onChangeText={(text) =>
-                setImages((prev) =>
-                  prev.map((item, idx) =>
-                    idx === index ? { ...item, description: text } : item
-                  )
-                )
-              }
-            />
-            </View>
-            
+            <View style={styles.imageContainer}>
+              <Image source={{ uri: selectedImage }} style={styles.image} />
+              <View style={styles.detailContainer}>
+                <TextInput
+                  placeholder="Title"
+                  value={imageDetails.title}
+                  onChangeText={(text) =>
+                    setImageDetails((prev) => ({ ...prev, title: text }))
+                  }
+                />
+                <TextInput
+                  placeholder="Date"
+                  value={imageDetails.date}
+                  onChangeText={(text) =>
+                    setImageDetails((prev) => ({ ...prev, date: text }))
+                  }
+                />
+                <TextInput
+                  placeholder="Description"
+                  value={imageDetails.description}
+                  onChangeText={(text) =>
+                    setImageDetails((prev) => ({ ...prev, description: text }))
+                  }
+                />
+              </View>
+
+              <View style={styles.buttonContainer}>
+                
+                <Button onPress={handleSelectNewImage} style={styles.button2}>
+                  New Image
+                </Button>
+
+                <Button onPress={uploadHandler} style={styles.button2}>
+                  Upload Image
+                </Button>
+              </View>
             </View>
           </View>
-        ))}
+        )}
       </ScrollView>
     </View>
   );
@@ -97,7 +125,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     backgroundColor: colors.offWhite,
-    //marginBottom: 10
   },
   button: {
     fontSize: 12,
@@ -107,15 +134,25 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
+  button2: {
+    fontSize: 12,
+    alignItems: "center",
+    backgroundColor: colors.darkTeal,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginHorizontal: 2, // Added margin for spacing between buttons
+   // padding: 6,
+    borderRadius: 12,
+    alignItems: 'center',
+    //flex: 1/2
+  },
   imageContainer: {
     marginVertical: 10,
     alignItems: "center",
-    flexDirection: 'row'
   },
   detailContainer: {
-   // marginVertical: 10,
     alignItems: "center",
-    padding: 10
+    padding: 10,
   },
   card: {
     flex: 1,
@@ -123,10 +160,10 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#ECECEC",
     borderRadius: 12,
-    elevation: 4, // box shadow
+    elevation: 4,
     marginTop: 20,
-    margin: 10
-  }, 
+    margin: 10,
+  },
   image: {
     width: 200,
     height: 200,
@@ -139,5 +176,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });

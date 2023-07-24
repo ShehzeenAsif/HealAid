@@ -31,7 +31,7 @@ const SearchDoctor = ({navigation}) => {
       
       <View style={styles.card}> 
         <Text style={styles.doctorName}>{item.name}</Text>
-        <Text style={styles.doctorSpecialty}>{item.specialty}</Text>
+        {/* <Text style={styles.doctorSpecialty}>{item.specialty}</Text> */}
         
       </View>
       <View style={styles.buttonContainer}> 
@@ -53,6 +53,7 @@ const SearchDoctor = ({navigation}) => {
         onChangeText={(text) => setSearchTerm(text)}
       />
       <Button onPress={handleSearch} style={styles.button}>Search</Button>
+      <View style={styles.cardOuterContainer}>
       {/* <FlatList
         data={searchResults}
         renderItem={renderDoctorCard}
@@ -64,7 +65,7 @@ const SearchDoctor = ({navigation}) => {
             <View style={styles.cardContainer}>
               <View style={styles.card}> 
                  <Text style={styles.doctorName}>{item.name}</Text>
-                <Text style={styles.doctorSpecialty}>{item.specialty}</Text>
+                {/* <Text style={styles.doctorSpecialty}>{item.specialty}</Text> */}
               </View>
               <View style={styles.buttonContainer}> 
                 <Button onPress={handleBook} style={styles.button}>Book Now</Button>
@@ -73,6 +74,7 @@ const SearchDoctor = ({navigation}) => {
             </View>
           );
         })}
+        </View>
     </View>
   );
 }
@@ -84,6 +86,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 6,
+    marginTop:-100,
   },
   cardContainer: {
     flexDirection : 'row',
@@ -91,6 +94,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 16,
     marginBottom: 16,
+    //marginTop:,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -99,6 +103,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  cardOuterContainer: {
+  
+   // padding: ,
+
+    marginTop:16,
+   
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+
   buttonContainer: {
     paddingVertical: 10,
     paddingHorizontal: 12,
@@ -115,9 +130,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   card: {
-   
-    flex:1,
-    
+    flex:1,  
   },
   doctorName: {
     fontWeight: 'bold',

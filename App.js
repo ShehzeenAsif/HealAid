@@ -24,7 +24,9 @@ import DoctorHomeScreen from './Screens/DoctorScreens/DoctorHomeScreen';
 import DoctorProfile from './Screens/DoctorScreens/DoctorProfile';
 import ScheduledAppointments from './Screens/DoctorScreens/ScheduledAppointments';
 import MetaMask from './Screens/PatientScreens/Booking/MetaMask';
-
+import ShareRecord from './Screens/PatientScreens/ShareRecord';
+import AgaKhan from './Screens/HospitalScreens/AgaKhan';
+import Liaquat from './Screens/HospitalScreens/Liaquat';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -55,7 +57,7 @@ const Dashboard = ({ route }) => {
         }}
       />
       <Tab.Screen
-        name="My Appointments"
+        name="Appointments"
         component={MyAppointments}
         options={{
           title: "My Appointments",
@@ -77,6 +79,21 @@ const Dashboard = ({ route }) => {
           tabBarIcon: ({ focused }) => (
             <AntDesign
               name="addfile"
+              size={24}
+              color={focused ? colors.light : colors.offWhite}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="ShareRecord"
+        component={ShareRecord}
+        initialParams={route}
+        options={{
+          title: "ShareRecord",
+          tabBarIcon: ({ focused }) => (
+            <AntDesign
+              name="sharealt"
               size={24}
               color={focused ? colors.light : colors.offWhite}
             />
@@ -201,6 +218,8 @@ export default function App() {
             <Stack.Screen name="PatientDetails" component={PatientDetails}  />
             <Stack.Screen name="PaymentDetails" component={PaymentDetails} />
             <Stack.Screen name="MetaMask" component={MetaMask} />
+            <Stack.Screen name="AgaKhan" component={AgaKhan} />
+            <Stack.Screen name="Liaquat" component={Liaquat} />
            
           </Stack.Navigator>
         </NavigationContainer>

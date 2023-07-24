@@ -27,7 +27,7 @@ const PickImage = ({ onSelectImage }) => {
     });
 
     if (!result.canceled) {
-      onSelectImage(result.assets[0].uri);
+      onSelectImage(result.uri);
     }
   };
 

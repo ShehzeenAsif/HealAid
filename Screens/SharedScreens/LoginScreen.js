@@ -1,10 +1,11 @@
-import { ImageBackground, StyleSheet, Text, View, TextInput } from "react-native";
-import { useState } from "react";
+// src/LoginScreen.js
+import React, { useState } from "react";
+import { View, TextInput, Text, StyleSheet, Alert } from "react-native";
 import Button from "../../components/UI/Button";
 import Card from "../../components/UI/Card";
 import { colors } from "../../constants/colors";
 
-const LoginScreen = ({ navigation, route }) => {
+const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -14,10 +15,11 @@ const LoginScreen = ({ navigation, route }) => {
     navigation.navigate("SignupScreen", {});
   };
 
-  const loginAsPatientHandler = () => {
+   const loginAsPatientHandler = () => {
     // Reset previous error messages
     setEmailError("");
     setPasswordError("");
+    console.log(email,password)
 
     // Field validation
     if (!email.trim()) {
@@ -30,9 +32,41 @@ const LoginScreen = ({ navigation, route }) => {
       return;
     }
 
-    // If all fields are filled, proceed to login as a patient
-    navigation.navigate("DashboardScreen", {});
-  };
+  //   try {
+  //     const response = await fetch("https://778c-116-90-111-14.ngrok.io/api/v1/patient/login", {
+  //       method: "POST",
+  //       headers: {
+  //         Accept: "application/json",
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         email: email,
+  //        password: password,
+  //       }),
+  //     });
+
+  //     const responseData = await response.json();
+  //     console.log(responseData);
+
+  //     // Assuming the response structure matches the given API response
+  //     const { code, status, accessToken } = responseData;
+
+  //     if (code === 200 && status && accessToken) {
+  //       // Login successful, save accessToken to secure storage if required
+  //       // AsyncStorage.setItem('accessToken', accessToken);
+
+  //       // Redirect to the main screen after successful login
+         navigation.navigate("DashboardScreen", {});
+  //     } else {
+  //       // Handle unsuccessful login (optional)
+  //       // Show appropriate error message
+  //       Alert.alert("Error", "Invalid email or password.");
+  //     }
+  //   } catch (error) {
+  //     // Handle network or other errors
+  //     console.error("Login failed:", error);
+  //   }
+   };
 
   const loginAsDocHandler = () => {
     navigation.navigate("DoctorDashboard", {});
@@ -41,10 +75,6 @@ const LoginScreen = ({ navigation, route }) => {
   return (
     <View style={styles.container}>
       <Card style={styles.cardContainer}>
-        <ImageBackground
-          source={require("../../assets/images/signupbg.png")}
-          style={styles.backgroundImage}
-        />
         <View style={styles.textContainer}>
           <TextInput
             style={styles.inputContainer}
@@ -62,8 +92,9 @@ const LoginScreen = ({ navigation, route }) => {
             placeholder="Password"
             value={password}
             onChangeText={(text) => {
-              console.log("Password Typed:", text);
               setPassword(text);
+              console.log("Password Typed:", text);
+              
             }}
             secureTextEntry
           />
@@ -84,7 +115,6 @@ const LoginScreen = ({ navigation, route }) => {
             Register Now
           </Text>
         </Text>
-
       </Card>
     </View>
   );
@@ -95,11 +125,6 @@ export default LoginScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  backgroundImage: {
-    marginTop: 40,
-    width: 250,
-    height: 200,
   },
   cardContainer: {
     marginTop: 200,
@@ -125,13 +150,6 @@ const styles = StyleSheet.create({
   buttonContainer1: {
     padding: 6,
   },
-  forgetPasswordText: {
-    color: "orange",
-    textDecorationLine: "underline",
-    marginTop: -5,
-    marginLeft: 150,
-    marginBottom: 20,
-  },
   registerText: {
     fontSize: 16,
     marginTop: 16,
@@ -150,6 +168,6 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     borderBottomWidth: 1,
     borderBottomColor: colors.darkTeal,
-    width: 250
+    width: 250,
   },
 });

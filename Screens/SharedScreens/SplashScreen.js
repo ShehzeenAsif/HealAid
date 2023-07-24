@@ -166,7 +166,9 @@ const styles = StyleSheet.create({
     top:330,
     width: 250,
     left: 60,
-   // justifyContent: 'center',
+    justifyContent: 'center',
+   // alignItems: 'center'
+   alignContent: 'center'
     
   },
   button: {
